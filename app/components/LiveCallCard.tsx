@@ -106,13 +106,13 @@ export default function LiveCallCard() {
   }, []);
 
   const isActive = activeLead !== null;
-  const name     = activeLead?.["Full Name"] || activeLead?.["Name"] || "Ashutosh Singh";
-  const phone    = activeLead?.["Phone Number"] || activeLead?.["Phone"] || "9219583594";
-  const property = activeLead?.["Property Type"] || activeLead?.["Property"] || "Residential";
-  const location = activeLead?.["Location"] || activeLead?.["City"] || "Shalimar City, Bhopal";
-  const source   = activeLead?.["Lead Source"] || activeLead?.["Source"] || "Facebook Ad";
-  const callSt   = activeLead?.["Call Status"] || "In Progress";
-  const initials = name.split(" ").filter(Boolean).slice(0,2).map((w:string)=>w[0]).join("").toUpperCase()||"AS";
+  const name     = activeLead?.["Full Name"] || activeLead?.["Name"] || "";
+  const phone    = activeLead?.["Phone Number"] || activeLead?.["Phone"] || "--";
+  const property = activeLead?.["Property Type"] || activeLead?.["Property"] || "--";
+  const location = activeLead?.["Location"] || activeLead?.["City"] || "--";
+  const source   = activeLead?.["Lead Source"] || activeLead?.["Source"] || "--";
+  const callSt   = activeLead?.["Call Status"] || "No Active Call";
+  const initials = name ? name.split(" ").filter(Boolean).slice(0,2).map((w:string)=>w[0]).join("").toUpperCase() : "--";
 
   return (
     <div style={{ display:"flex", flexDirection:"column", height:"100%" }}>
@@ -165,7 +165,7 @@ export default function LiveCallCard() {
         <div style={{ display:"flex", alignItems:"center", padding:"8px 0" }}>
           <Star size={13} color="#4b5563" style={{ flexShrink:0 }} />
           <span style={{ color:"#6b7280", fontSize:11, marginLeft:8, flex:1 }}>Lead Score</span>
-          <LeadScoreRing score={isActive?78:0} />
+          <LeadScoreRing score={0} />
         </div>
       </div>
 

@@ -1,7 +1,23 @@
 ﻿"use client";
 import { Bell, HelpCircle, ChevronDown, Activity } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
+  const [inProgress, setInProgress] = useState<number|null>(null);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch("/api/stats");
+        const data = await res.json();
+        if (data.stats) setInProgress(data.stats.inProgress);
+      } catch { /* keep prev */ }
+    };
+    load();
+    const t = setInterval(load, 30_000);
+    return () => clearInterval(t);
+  }, []);
+
   return (
     <nav style={{
       background:"var(--bg-nav)",
@@ -58,7 +74,7 @@ export default function Navbar() {
           </svg>
         </div>
         <span style={{ color:"#9ca3af", fontSize:11 }}>Active Calls</span>
-        <span style={{ color:"#fff", fontSize:14, fontWeight:700 }}>14</span>
+        <span style={{ color:"#fff", fontSize:14, fontWeight:700 }}>{inProgress ?? "--"}</span>
       </div>
 
       {/* ── AI Health chip ── */}

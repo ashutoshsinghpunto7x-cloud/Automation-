@@ -5,7 +5,7 @@ import LiveConversation from "./components/LiveConversation";
 import StatsSidebar     from "./components/StatsSidebar";
 import {
   PhoneOff, Users, Phone, Megaphone, RotateCcw, Plug, IndianRupee,
-  Clock, TrendingUp, TrendingDown, ArrowUp,
+  Clock, TrendingUp, ArrowUp,
 } from "lucide-react";
 
 interface Stats {
@@ -44,46 +44,31 @@ function StatCard({ icon: Icon, ic, ibg, label, value, sub, subColor, trend, tre
   );
 }
 
-/* ── Calls vs Conversions chart ── */
-function CallsConvChart() {
-  const W=400; const H=80;
-  /* Calls line pts */
-  const cPts: [number,number][] = [[0,55],[45,48],[90,62],[135,38],[180,28],[225,52],[270,22],[315,34],[360,18],[400,28]];
-  /* Conversions line pts */
-  const vPts: [number,number][] = [[0,70],[45,68],[90,72],[135,62],[180,55],[225,65],[270,50],[315,58],[360,46],[400,52]];
-  const line = (pts:[number,number][]) => pts.reduce((acc,[x,y],i)=>{
-    if(i===0) return `M${x} ${y}`;
-    const[px,py]=pts[i-1]; const cx=(px+x)/2;
-    return `${acc} C${cx} ${py},${cx} ${y},${x} ${y}`;
-  },"");
+/* ── Calls vs Conversions: real summary only ── */
+function CallsConvChart({ s }: { s: Stats|null }) {
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width:"100%", height:H }}>
-      <defs>
-        <linearGradient id="cg1" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.22"/>
-          <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"/>
-        </linearGradient>
-        <linearGradient id="cg2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#22c55e" stopOpacity="0.18"/>
-          <stop offset="100%" stopColor="#22c55e" stopOpacity="0"/>
-        </linearGradient>
-      </defs>
-      <path d={`${line(cPts)} L${W} ${H} L0 ${H} Z`} fill="url(#cg1)"/>
-      <path d={`${line(vPts)} L${W} ${H} L0 ${H} Z`} fill="url(#cg2)"/>
-      <path d={line(cPts)} fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round"/>
-      <path d={line(vPts)} fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round"/>
-      {/* Tooltip at 22 Jun (~x=270) */}
-      <line x1="270" y1="0" x2="270" y2={H} stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="4 3"/>
-      <circle cx="270" cy="22" r="4.5" fill="#fff" stroke="#3b82f6" strokeWidth="2"/>
-      <circle cx="270" cy="50" r="4.5" fill="#fff" stroke="#22c55e" strokeWidth="2"/>
-      {/* Tooltip box */}
-      <rect x="230" y="2" width="72" height="36" rx="6" fill="#181929" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
-      <text x="266" y="14" textAnchor="middle" fontSize="8.5" fill="#9ca3af" fontWeight="600">22 Jun</text>
-      <circle cx="237" cy="21" r="3" fill="#3b82f6"/>
-      <text x="243" y="24" fontSize="8" fill="#9ca3af">Calls: <tspan fill="#3b82f6" fontWeight="700">49</tspan></text>
-      <circle cx="237" cy="31" r="3" fill="#22c55e"/>
-      <text x="243" y="34" fontSize="8" fill="#9ca3af">Conv: <tspan fill="#22c55e" fontWeight="700">23</tspan></text>
-    </svg>
+    <div style={{ height:80, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:8 }}>
+      {s ? (
+        <div style={{ display:"flex", gap:24 }}>
+          <div style={{ textAlign:"center" }}>
+            <p style={{ color:"#3b82f6", fontSize:28, fontWeight:700, lineHeight:1 }}>{s.answered}</p>
+            <p style={{ color:"#6b7280", fontSize:10, marginTop:3 }}>Calls Made</p>
+          </div>
+          <div style={{ width:1, background:"rgba(255,255,255,0.07)", alignSelf:"stretch" }} />
+          <div style={{ textAlign:"center" }}>
+            <p style={{ color:"#22c55e", fontSize:28, fontWeight:700, lineHeight:1 }}>{s.visitsBooked}</p>
+            <p style={{ color:"#6b7280", fontSize:10, marginTop:3 }}>Visits Booked</p>
+          </div>
+          <div style={{ width:1, background:"rgba(255,255,255,0.07)", alignSelf:"stretch" }} />
+          <div style={{ textAlign:"center" }}>
+            <p style={{ color:"#f59e0b", fontSize:28, fontWeight:700, lineHeight:1 }}>{s.convRate}%</p>
+            <p style={{ color:"#6b7280", fontSize:10, marginTop:3 }}>Conv Rate</p>
+          </div>
+        </div>
+      ) : (
+        <p style={{ color:"#374151", fontSize:11 }}>Loading data...</p>
+      )}
+    </div>
   );
 }
 
@@ -131,47 +116,13 @@ function LeadFunnel({ s }: { s: Stats|null }) {
   );
 }
 
-/* ── Agent Performance ── */
-const AGENTS = [
-  { name:"Ava (AI)",  pct:89, delta:"+12%", up:true,  color:"#3b82f6" },
-  { name:"Neon (AI)", pct:74, delta:"+5%",  up:true,  color:"#8b5cf6" },
-  { name:"Echo (AI)", pct:93, delta:"+18%", up:true,  color:"#22c55e" },
-  { name:"Nova (AI)", pct:68, delta:"-3%",  up:false, color:"#f59e0b" },
-];
-
 function AgentList() {
   return (
-    <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
-      {AGENTS.map(({ name, pct, delta, up, color }) => (
-        <div key={name}>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:5 }}>
-            <div style={{ display:"flex", alignItems:"center", gap:9 }}>
-              {/* Agent avatar with AI indicator */}
-              <div style={{ position:"relative", width:30, height:30, flexShrink:0 }}>
-                <div style={{ width:30, height:30, borderRadius:"50%", background:"var(--bg-inner)", border:`1.5px solid ${color}55`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <rect x="2" y="4" width="10" height="7" rx="1.5" fill={color} opacity="0.6"/>
-                    <rect x="4" y="2" width="6" height="3" rx="1" fill={color} opacity="0.4"/>
-                    <circle cx="5" cy="7.5" r="1.2" fill={color}/>
-                    <circle cx="9" cy="7.5" r="1.2" fill={color}/>
-                  </svg>
-                </div>
-              </div>
-              <span style={{ color:"#9ca3af", fontSize:12 }}>{name}</span>
-            </div>
-            <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-              <span style={{ color:"#fff", fontSize:13, fontWeight:700 }}>{pct}%</span>
-              <div style={{ display:"flex", alignItems:"center", gap:2 }}>
-                {up ? <TrendingUp size={10} color="#22c55e"/> : <TrendingDown size={10} color="#ef4444"/>}
-                <span style={{ color:up?"#22c55e":"#ef4444", fontSize:10, fontWeight:600 }}>{delta}</span>
-              </div>
-            </div>
-          </div>
-          <div style={{ height:5, borderRadius:3, background:"rgba(255,255,255,0.06)" }}>
-            <div style={{ height:"100%", width:`${pct}%`, borderRadius:3, background:color, opacity:0.8 }} />
-          </div>
-        </div>
-      ))}
+    <div style={{ height:"100%", display:"flex", alignItems:"center", justifyContent:"center" }}>
+      <p style={{ color:"#374151", fontSize:11, textAlign:"center" }}>
+        No agent data available.<br/>
+        <span style={{ fontSize:10, color:"#1f2937" }}>Connect agents via Integrations to track performance.</span>
+      </p>
     </div>
   );
 }
@@ -279,23 +230,23 @@ export default function OverviewPage() {
       {/* ── ROW 2: Six stat cards ── */}
       <div style={{ display:"grid", gridTemplateColumns:"repeat(6,1fr)", gap:10 }}>
         <StatCard icon={Users}       ic="#3b82f6" ibg="rgba(59,130,246,0.15)"
-          label="ACTIVE LEADS"  value="247"
-          sub="↑24 today"       subColor="#22c55e" trendUp={true} />
+          label="TOTAL LEADS"   value={stats?.totalLeads !== undefined ? String(stats.totalLeads) : "--"}
+          sub={stats ? `${stats.interested} interested` : ""} subColor="#22c55e" />
         <StatCard icon={Phone}       ic="#8b5cf6" ibg="rgba(139,92,246,0.15)"
-          label="CALL QUEUE"    value={`${stats?.inProgress??14}/38`}
-          sub="Live / Total" />
+          label="IN PROGRESS"   value={stats?.inProgress !== undefined ? String(stats.inProgress) : "--"}
+          sub="Currently calling" />
         <StatCard icon={Megaphone}   ic="#f59e0b" ibg="rgba(245,158,11,0.15)"
-          label="CAMPAIGNS"     value="3"
-          sub="Running" />
+          label="CALLS MADE"    value={stats?.answered !== undefined ? String(stats.answered) : "--"}
+          sub={stats ? `${stats.apiErrors} pending` : ""} />
         <StatCard icon={RotateCcw}   ic="#22c55e" ibg="rgba(34,197,94,0.15)"
-          label="CRM SYNC"      value="Healthy"
-          sub="Last synced 12 sec ago" subColor="#22c55e" />
+          label="VISITS BOOKED" value={stats?.visitsBooked !== undefined ? String(stats.visitsBooked) : "--"}
+          sub={stats ? `${stats.convRate}% conv rate` : ""} subColor="#22c55e" />
         <StatCard icon={Plug}        ic="#3b82f6" ibg="rgba(59,130,246,0.15)"
-          label="INTEGRATIONS"  value="5"
-          sub="Connected" />
+          label="INTERESTED"    value={stats?.interested !== undefined ? String(stats.interested) : "--"}
+          sub="From calls" />
         <StatCard icon={IndianRupee} ic="#f59e0b" ibg="rgba(245,158,11,0.15)"
-          label="COST TRACKER"  value="4,820"
-          sub="June spend" />
+          label="API ERRORS"    value={stats?.apiErrors !== undefined ? String(stats.apiErrors) : "--"}
+          sub="Need retry" />
       </div>
 
       {/* ── ROW 3: Three charts ── */}
@@ -317,12 +268,7 @@ export default function OverviewPage() {
               <span style={{ color:"#6b7280", fontSize:10 }}>Conversions</span>
             </div>
           </div>
-          <CallsConvChart />
-          <div style={{ display:"flex", justifyContent:"space-between", marginTop:6 }}>
-            {["1 Jun","8 Jun","15 Jun","22 Jun","29 Jun"].map(d => (
-              <span key={d} style={{ color:"#374151", fontSize:9 }}>{d}</span>
-            ))}
-          </div>
+          <CallsConvChart s={stats} />
         </div>
 
         {/* Lead Funnel */}

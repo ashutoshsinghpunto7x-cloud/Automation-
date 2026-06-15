@@ -99,23 +99,23 @@ export default function StatsSidebar() {
 
   const KPI = [
     {
-      label:"TOTAL LEADS", value:s?String(s.totalLeads):"49",
-      trend:"+18% vs yesterday", trendUp:true,
+      label:"TOTAL LEADS", value:s?String(s.totalLeads):"--",
+      trend:s?`${s.interested} interested`:"", trendUp:false,
       icon:Users, ic:"#3b82f6", ibg:"rgba(59,130,246,0.15)",
     },
     {
-      label:"CALLS MADE", value:s?String(s.answered):"22",
-      trend:"+10% vs yesterday", trendUp:true,
+      label:"CALLS MADE", value:s?String(s.answered):"--",
+      trend:"", trendUp:false,
       icon:Phone, ic:"#22c55e", ibg:"rgba(34,197,94,0.15)",
     },
     {
-      label:"PENDING CALLS", value:s?String(s.apiErrors):"27",
-      trend:s?`${s.inProgress} in progress`:"18 in progress", trendUp:false,
+      label:"PENDING CALLS", value:s?String(s.apiErrors):"--",
+      trend:s?`${s.inProgress} in progress`:"", trendUp:false,
       icon:Clock, ic:"#f59e0b", ibg:"rgba(245,158,11,0.15)",
     },
     {
-      label:"VISITS BOOKED", value:s?String(s.visitsBooked):"2",
-      trend:s?`${s.interested} interested`:"2 interested", trendUp:false,
+      label:"VISITS BOOKED", value:s?String(s.visitsBooked):"--",
+      trend:"", trendUp:false,
       icon:Calendar, ic:"#3b82f6", ibg:"rgba(59,130,246,0.15)",
     },
   ];
@@ -165,16 +165,12 @@ export default function StatsSidebar() {
       <div style={{ background:"var(--bg-inner)", border:"1px solid var(--border)", borderRadius:14, padding:"12px 14px", marginBottom:8 }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:2 }}>
           <p style={{ color:"#6b7280", fontSize:9, letterSpacing:"0.08em", fontWeight:700 }}>CONVERSION RATE</p>
-          <div style={{ display:"flex", alignItems:"center", gap:3 }}>
-            <TrendingUp size={10} color="#22c55e" />
-            <span style={{ color:"#22c55e", fontSize:10, fontWeight:600 }}>+12% vs yesterday</span>
-          </div>
         </div>
         <p style={{ color:"#eab308", fontSize:30, fontWeight:700, lineHeight:1.1 }}>
-          {s ? `${s.convRate}%` : "50.0%"}
+          {s ? `${s.convRate}%` : "--"}
         </p>
         <p style={{ color:"#4b5563", fontSize:10, marginTop:2 }}>
-          {s ? `${s.visitsBooked} visits from ${s.answered} completed calls` : "2 visits from 22 completed calls"}
+          {s ? `${s.visitsBooked} visits from ${s.answered} completed calls` : ""}
         </p>
         <ConvSparkline />
       </div>

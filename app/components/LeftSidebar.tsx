@@ -87,8 +87,8 @@ const NAV = [
   { href:"/leads",     Icon:IconUsers,     label:"Leads"       },
   { href:"/campaigns", Icon:IconMegaphone, label:"Campaigns"   },
   { href:"/analytics", Icon:IconBarChart,  label:"Analytics"   },
-  { href:"/settings",  Icon:IconPlug,      label:"Integrations"},
-  { href:"/settings",  Icon:IconSettings,  label:"Settings"    },
+  { href:"/integrations", Icon:IconPlug,      label:"Integrations"},
+  { href:"/settings",    Icon:IconSettings,  label:"Settings"    },
 ];
 
 export default function LeftSidebar() {
