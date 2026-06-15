@@ -83,31 +83,44 @@ function InfoRow({ icon: Icon, label, value, valueColor="#9ca3af", extra }: {
 
 export default function LiveCallCard() {
   const [activeLead, setActiveLead] = useState<Lead | null>(null);
+  const [vapiActive, setVapiActive] = useState(false);
+  const [vapiName,   setVapiName]   = useState("");
+  const [vapiPhone,  setVapiPhone]  = useState("");
   const [loading, setLoading]       = useState(true);
   const [lastFetch, setLastFetch]   = useState("");
 
   const fetchLive = async () => {
     try {
-      const res  = await fetch("/api/leads");
-      const data = await res.json();
-      if (data.leads && Array.isArray(data.leads)) {
-        const found = data.leads.find((l: Lead) => detectStatus(l) !== null) ?? null;
+      const [leadsRes, vapiRes] = await Promise.all([
+        fetch("/api/leads"),
+        fetch("/api/vapi/live"),
+      ]);
+      const [leadsData, vapiData] = await Promise.all([leadsRes.json(), vapiRes.json()]);
+
+      /* Vapi Redis is source of truth for active state */
+      setVapiActive(vapiData.active === true);
+      setVapiName(vapiData.callerName || "");
+      setVapiPhone(vapiData.callerPhone || "");
+
+      if (leadsData.leads && Array.isArray(leadsData.leads)) {
+        const found = leadsData.leads.find((l: Lead) => detectStatus(l) !== null) ?? null;
         setActiveLead(found);
       }
       setLastFetch(new Date().toLocaleTimeString("en-IN", { hour:"2-digit", minute:"2-digit", second:"2-digit" }));
     } catch { /* keep prev */ }
-    finally   { setLoading(false); }
+    finally { setLoading(false); }
   };
 
   useEffect(() => {
     fetchLive();
-    const t = setInterval(fetchLive, 15_000);
+    const t = setInterval(fetchLive, 5_000); // poll every 5s for faster response
     return () => clearInterval(t);
   }, []);
 
-  const isActive = activeLead !== null;
-  const name     = activeLead?.["Full Name"] || activeLead?.["Name"] || "";
-  const phone    = activeLead?.["Phone Number"] || activeLead?.["Phone"] || "--";
+  /* Vapi Redis is authoritative — sheet is only used for extra lead details */
+  const isActive = vapiActive;
+  const name     = activeLead?.["Full Name"] || activeLead?.["Name"] || vapiName || "";
+  const phone    = activeLead?.["Phone Number"] || activeLead?.["Phone"] || vapiPhone || "--";
   const property = activeLead?.["Property Type"] || activeLead?.["Property"] || "--";
   const location = activeLead?.["Location"] || activeLead?.["City"] || "--";
   const source   = activeLead?.["Lead Source"] || activeLead?.["Source"] || "--";

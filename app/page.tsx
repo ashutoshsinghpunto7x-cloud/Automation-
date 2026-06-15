@@ -179,23 +179,31 @@ export default function OverviewPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [sr, lr] = await Promise.all([fetch("/api/stats"), fetch("/api/leads")]);
-        const [sd, ld] = await Promise.all([sr.json(), lr.json()]);
+        const [sr, lr, vr] = await Promise.all([
+          fetch("/api/stats"),
+          fetch("/api/leads"),
+          fetch("/api/vapi/live"),
+        ]);
+        const [sd, ld, vd] = await Promise.all([sr.json(), lr.json(), vr.json()]);
         if (sd.stats) setStats(sd.stats);
-        if (ld.leads) {
-          const found = ld.leads.find((l: Record<string,string>) => {
+
+        /* Vapi Redis is source of truth for active call state */
+        if (vd.active === true) {
+          setActive(true);
+          /* prefer sheet lead name, fall back to what Vapi reported */
+          const sheetLead = ld.leads?.find((l: Record<string,string>) => {
             const s = (l["Call Status"]||"").toLowerCase();
             return s.includes("in progress") || s==="calling...";
           });
-          if (found) {
-            setName(found["Full Name"] || found["Name"] || "Ashutosh Singh");
-            setActive(true);
-          }
+          setName(sheetLead?.["Full Name"] || sheetLead?.["Name"] || vd.callerName || "--");
+        } else {
+          setActive(false);
+          setName("--");
         }
       } catch { /* ignore */ }
     };
     load();
-    const t = setInterval(load, 30_000);
+    const t = setInterval(load, 5_000); // poll every 5s
     return ()=>clearInterval(t);
   }, []);
 
