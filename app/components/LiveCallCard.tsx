@@ -173,9 +173,8 @@ export default function LiveCallCard() {
       <div style={{ background:"rgba(59,130,246,0.06)", border:"1px solid rgba(59,130,246,0.15)", borderRadius:10, padding:"10px 12px", marginTop:6 }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
           <span style={{ color:"#6b7280", fontSize:10, fontWeight:600, letterSpacing:"0.05em" }}>AI Confidence</span>
-          <span style={{ color:"#fff", fontSize:18, fontWeight:700 }}>{isActive?"92%":"--"}</span>
+          <span style={{ color:"#fff", fontSize:18, fontWeight:700 }}>--</span>
         </div>
-        {isActive && <ConfSparkline />}
       </div>
 
       {lastFetch && (
