@@ -1,6 +1,8 @@
 ﻿"use client";
 import { useState, useEffect } from "react";
 import { Phone, Home, MapPin, Globe, PhoneCall, Star, PhoneOutgoing } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
+import StartCallModal from "./StartCallModal";
 
 interface Lead { [key: string]: string; }
 
@@ -88,6 +90,7 @@ export default function LiveCallCard() {
   const [vapiPhone,  setVapiPhone]  = useState("");
   const [loading, setLoading]       = useState(true);
   const [lastFetch, setLastFetch]   = useState("");
+  const [showModal, setShowModal]   = useState(false);
 
   const fetchLive = async () => {
     try {
@@ -135,16 +138,39 @@ export default function LiveCallCard() {
   const initials = name ? name.split(" ").filter(Boolean).slice(0,2).map((w:string)=>w[0]).join("").toUpperCase() : "--";
 
   return (
+    <>
+    <AnimatePresence>
+      {showModal && (
+        <StartCallModal
+          onClose={() => setShowModal(false)}
+          onCallStarted={() => { fetchLive(); setShowModal(false); }}
+        />
+      )}
+    </AnimatePresence>
+
     <div style={{ display:"flex", flexDirection:"column", height:"100%" }}>
 
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12 }}>
         <span style={{ color:"#6b7280", fontSize:10, fontWeight:700, letterSpacing:"0.09em" }}>CALLER INFO</span>
-        <button style={{
-          background:"rgba(59,130,246,0.12)", border:"1px solid rgba(59,130,246,0.25)",
-          borderRadius:6, padding:"3px 10px",
-          color:"#60a5fa", fontSize:10, fontWeight:600,
-        }}>Transcript</button>
+        <button
+          onClick={() => setShowModal(true)}
+          style={{
+            background: isActive
+              ? "rgba(255,255,255,0.06)"
+              : "linear-gradient(135deg,rgba(34,197,94,0.25),rgba(34,197,94,0.12))",
+            border: isActive ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(34,197,94,0.4)",
+            borderRadius:8, padding:"5px 12px",
+            color: isActive ? "#6b7280" : "#22c55e",
+            fontSize:11, fontWeight:700, cursor: isActive ? "not-allowed" : "pointer",
+            display:"flex", alignItems:"center", gap:5,
+          }}
+          disabled={isActive}
+          title={isActive ? "Call already in progress" : "Start a new call"}
+        >
+          <Phone size={11} />
+          {isActive ? "In Call" : "Start Call"}
+        </button>
       </div>
 
       {/* Avatar card */}
@@ -201,5 +227,6 @@ export default function LiveCallCard() {
         <p style={{ color:"#374151", fontSize:9, textAlign:"right", marginTop:5 }}>Synced {lastFetch}</p>
       )}
     </div>
+    </>
   );
 }
