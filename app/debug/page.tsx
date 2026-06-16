@@ -33,6 +33,28 @@ export default function DebugPage() {
     setLoading(false);
   };
 
+  const testWebhook = async () => {
+    append("Testing webhook endpoint directly...");
+    try {
+      const r = await fetch("/api/vapi/webhook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: {
+            type: "call-started",
+            call: { id: "test-001", customer: { number: "+919999999999", name: "Webhook Test" } }
+          }
+        }),
+      });
+      append(`Webhook response: HTTP ${r.status} ${r.statusText}`);
+      const d = await r.json().catch(() => ({}));
+      append(`Webhook body: ${JSON.stringify(d)}`);
+      await refresh();
+    } catch (e: any) {
+      append(`Webhook ERROR: ${e.message}`);
+    }
+  };
+
   const inject = async (action: string, extra: object = {}) => {
     append(`Injecting: ${action} ...`);
     const r = await fetch("/api/vapi/inject", {
@@ -57,6 +79,10 @@ export default function DebugPage() {
       {/* Controls */}
       <div style={CARD}>
         <p style={{ color: "#9ca3af", fontSize: 11, fontWeight: 700, marginBottom: 12, letterSpacing: "0.08em" }}>INJECT TEST EVENTS</p>
+        <button style={BTN("#ef4444")} onClick={testWebhook}>
+          🔌 Test Webhook Endpoint
+        </button>
+        <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "10px 0" }} />
         <button style={BTN("#22c55e")} onClick={() => inject("start", { name: "Rahul Verma", phone: "9876543210" })}>
           ▶ Start Call
         </button>
