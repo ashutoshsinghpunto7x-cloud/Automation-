@@ -5,8 +5,8 @@ import LiveCallCard     from "./components/LiveCallCard";
 import LiveConversation from "./components/LiveConversation";
 import StatsSidebar     from "./components/StatsSidebar";
 import {
-  Search, Bell, PhoneOff, Users, Phone, Megaphone, RotateCcw, Plug, IndianRupee,
-  Clock, TrendingUp, Target,
+  Users, Phone, Megaphone, RotateCcw, Plug,
+  TrendingUp, Target,
 } from "lucide-react";
 
 interface Stats {
@@ -161,42 +161,6 @@ function AgentCard() {
   );
 }
 
-function LiveBanner({ name, isActive }: { name:string; isActive:boolean }) {
-  return (
-    <motion.div initial={{opacity:0,y:-8}} animate={{opacity:1,y:0}} transition={{duration:0.4}}
-      style={{display:"flex",alignItems:"center",justifyContent:"space-between",
-        padding:"12px 18px",marginBottom:12,
-        background:isActive?"linear-gradient(135deg,rgba(53,208,127,0.18),rgba(53,208,127,0.06))":CARD,
-        border:isActive?"1px solid rgba(53,208,127,0.4)":`1px solid ${BD}`,
-        borderRadius:R18,boxShadow:isActive?`${SH},0 0 24px rgba(53,208,127,0.18)`:SH}}>
-      <div style={{display:"flex",alignItems:"center",gap:10}}>
-        <span style={{position:"relative",display:"inline-flex",width:11,height:11}}>
-          {isActive && <span style={{position:"absolute",inset:0,borderRadius:"50%",background:"#35D07F",opacity:0.35,animation:"ping2 1.4s ease infinite"}}/>}
-          <span style={{position:"relative",borderRadius:"50%",background:isActive?"#35D07F":"#3a3d48",width:"100%",height:"100%",
-            boxShadow:isActive?"0 0 12px #35D07F":"none"}}/>
-        </span>
-        <span style={{color:isActive?"#fff":"#8F8F8F",fontSize:14,fontWeight:700,letterSpacing:"-0.01em"}}>
-          {isActive ? `LIVE CALL — ${name}` : "NO ACTIVE CALL"}
-        </span>
-      </div>
-      <div style={{display:"flex",alignItems:"center",gap:14}}>
-        <div style={{display:"flex",alignItems:"center",gap:7}}>
-          <Clock size={13} color={isActive?"#C5C5C5":"#5E6373"}/>
-          <span style={{color:isActive?"#C5C5C5":"#5E6373",fontSize:12,fontFamily:"monospace",letterSpacing:"0.05em"}}>--:--:--</span>
-        </div>
-        <motion.button whileHover={{scale:1.04}} whileTap={{scale:0.96}}
-          style={{display:"flex",alignItems:"center",gap:6,
-            background:isActive?"rgba(255,107,107,0.18)":"rgba(255,255,255,0.04)",
-            border:isActive?"1px solid rgba(255,107,107,0.45)":`1px solid ${BD}`,
-            borderRadius:10,padding:"7px 16px",cursor:isActive?"pointer":"default",
-            color:isActive?"#FF6B6B":"#5E6373",fontSize:12,fontWeight:600}}>
-          <PhoneOff size={13}/>End Call
-        </motion.button>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function OverviewPage() {
   const [stats,  setStats]  = useState<Stats|null>(null);
   const [name,   setName]   = useState("--");
@@ -240,29 +204,11 @@ export default function OverviewPage() {
       <style>{`@keyframes ping2{75%,100%{transform:scale(2.2);opacity:0}}::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:2px}`}</style>
 
       <div style={{height:"100%",background:BG,display:"flex",flexDirection:"column",overflow:"hidden"}}>
-        {/* Top search header (matches other pages) */}
-        <motion.div initial={{opacity:0,y:-14}} animate={{opacity:1,y:0}} transition={{duration:0.35}}
-          style={{padding:"16px 24px 0",flexShrink:0,display:"flex",alignItems:"center",gap:12}}>
-          <div style={{flex:1,display:"flex",alignItems:"center",gap:10,background:C2,border:`1px solid ${BD}`,
-            borderRadius:50,padding:"0 18px",height:44}}>
-            <Search size={14} color="#8F8F8F"/>
-            <input placeholder="Search dashboard…"
-              style={{background:"none",border:"none",outline:"none",color:"#fff",fontSize:13,flex:1}}/>
-          </div>
-          <motion.button whileHover={{scale:1.06}} whileTap={{scale:0.94}}
-            style={{width:44,height:44,borderRadius:50,background:C2,border:`1px solid ${BD}`,
-              display:"flex",alignItems:"center",justifyContent:"center",color:"#8F8F8F"}}><Bell size={15}/></motion.button>
-          <motion.div whileHover={{scale:1.05}}
-            style={{width:44,height:44,borderRadius:50,background:"linear-gradient(135deg,#29A8FF,#3B82F6)",
-              display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:700,color:"#fff",cursor:"pointer"}}>EK</motion.div>
-        </motion.div>
+        <div style={{flex:1,overflowY:"auto",padding:"18px 24px 24px",display:"flex",flexDirection:"column",gap:14}}>
 
-        <div style={{flex:1,overflowY:"auto",padding:"16px 24px 24px",display:"flex",flexDirection:"column",gap:14}}>
-
-          {/* ROW 1: Live call (banner + caller + conv) + Stats sidebar */}
+          {/* ROW 1: Live call (caller + conv) + Stats sidebar */}
           <div style={{display:"flex",gap:14}}>
             <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column"}}>
-              <LiveBanner name={name} isActive={active}/>
               <div style={{display:"flex",gap:12}}>
                 <motion.div initial={{opacity:0,x:-10}} animate={{opacity:1,x:0}} transition={{delay:0.15,duration:0.4}}
                   style={{width:280,flexShrink:0,background:CARD,border:`1px solid ${BD}`,
