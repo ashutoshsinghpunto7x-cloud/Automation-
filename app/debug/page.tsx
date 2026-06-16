@@ -132,7 +132,7 @@ export default function DebugPage() {
           <p style={{ color: "#ef4444", fontSize: 12 }}>No webhook payload received yet.</p>
           <p style={{ color: "#6b7280", fontSize: 11, marginTop: 6 }}>
             Make sure Vapi (or n8n) is sending POST requests to:<br/>
-            <span style={{ color: "#60a5fa" }}>https://punto7x.vercel.app/api/vapi/webhook</span>
+            <span style={{ color: "#60a5fa" }}>https://automation-git-main-ashutoshsinghpunto7x-clouds-projects.vercel.app/api/vapi/webhook</span>
           </p>
         </div>
       )}
