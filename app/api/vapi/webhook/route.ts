@@ -5,9 +5,15 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const rawBody = await req.json();
+    console.log("[Vapi] Raw payload:", JSON.stringify(rawBody).slice(0, 300));
+
+    /* n8n wraps Vapi payload as { body: {...}, headers: {...}, ... }
+       Direct Vapi sends { message: {...} } directly */
+    const body = rawBody?.body ?? rawBody;
     const msg  = body?.message ?? body;
     const type = msg?.type ?? msg?.message?.type;
+    console.log("[Vapi] Resolved type:", type);
 
     switch (type) {
 
@@ -24,6 +30,8 @@ export async function POST(req: NextRequest) {
 
       case "transcript":
       case "conversation-update": {
+        /* skip partial transcripts — only store final */
+        if (msg?.transcriptType === "partial") break;
         const role = msg?.role ?? msg?.transcript?.role ?? "";
         const text = msg?.transcript ?? msg?.transcript?.transcript ?? msg?.text ?? "";
         if (role && text) {
