@@ -1,19 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { startCall, addMessage, updateAnalysis, endCall } from "@/lib/callStore";
+import { Redis } from "@upstash/redis";
+
+const redis = Redis.fromEnv();
+const LOG_KEY = "vapi:last:payload";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
     const rawBody = await req.json();
-    console.log("[Vapi] Raw payload:", JSON.stringify(rawBody).slice(0, 300));
+
+    /* Store last payload in Redis for debugging — expires in 1 hour */
+    await redis.set(LOG_KEY, {
+      raw: rawBody,
+      receivedAt: new Date().toISOString(),
+    }, { ex: 3600 }).catch(() => {});
+
+    console.log("[Vapi] Raw payload:", JSON.stringify(rawBody).slice(0, 500));
 
     /* n8n wraps Vapi payload as { body: {...}, headers: {...}, ... }
        Direct Vapi sends { message: {...} } directly */
     const body = rawBody?.body ?? rawBody;
     const msg  = body?.message ?? body;
     const type = msg?.type ?? msg?.message?.type;
-    console.log("[Vapi] Resolved type:", type);
+    console.log("[Vapi] Resolved type:", type, "| keys:", Object.keys(msg ?? {}).join(","));
 
     switch (type) {
 
