@@ -19,36 +19,44 @@ export async function POST(req: NextRequest) {
 
       case "call-started":
       case "call.started": {
-        const call   = msg?.call ?? msg?.message?.call ?? {};
-        const callId = call?.id ?? "";
-        const name   = call?.customer?.name ?? call?.callee?.name ?? "";
-        const phone  = call?.customer?.number ?? call?.callee?.number ?? "";
+        const callObj = msg?.call ?? msg?.message?.call ?? msg ?? {};
+        const callId  = callObj?.id ?? "";
+        const cust    = callObj?.customer ?? callObj?.callee ?? {};
+        const name    = cust?.name ?? cust?.fullName ?? "";
+        const phone   = cust?.number ?? cust?.phoneNumber ?? "";
         await startCall(callId, name, phone);
         console.log("[Vapi] Call started:", callId, name, phone);
         break;
       }
 
-      case "transcript":
-      case "conversation-update": {
-        /* skip partial transcripts — only store final */
+      case "transcript": {
+        /* skip partial transcripts — only store final utterances */
         if (msg?.transcriptType === "partial") break;
-        const role = msg?.role ?? msg?.transcript?.role ?? "";
-        const text = msg?.transcript ?? msg?.transcript?.transcript ?? msg?.text ?? "";
-        if (role && text) {
+        const role = msg?.role ?? "";
+        const text = (typeof msg?.transcript === "string" ? msg.transcript : "") || msg?.text || "";
+        if (role && text.trim()) {
           await addMessage(
             role === "assistant" || role === "bot" ? "ai" : "user",
-            text
+            text.trim()
           );
+          console.log("[Vapi] transcript stored:", role, text.slice(0, 60));
         }
-        if (msg?.conversation) {
-          const arr: { role: string; content: string }[] = msg.conversation;
-          for (const m of arr) {
-            if (m.content?.trim()) {
-              await addMessage(
-                m.role === "assistant" || m.role === "bot" ? "ai" : "user",
-                m.content
-              );
-            }
+        break;
+      }
+
+      case "conversation-update": {
+        /* conversation-update sends the full conversation array — sync only the
+           last message to avoid duplicating everything on each event */
+        const arr: { role: string; message: string; content?: string }[] = msg?.conversation ?? [];
+        const last = arr[arr.length - 1];
+        if (last) {
+          const text = last.message ?? last.content ?? "";
+          if (text.trim()) {
+            await addMessage(
+              last.role === "assistant" || last.role === "bot" ? "ai" : "user",
+              text.trim()
+            );
+            console.log("[Vapi] conversation-update last msg:", last.role, text.slice(0, 60));
           }
         }
         break;

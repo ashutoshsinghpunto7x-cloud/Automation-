@@ -2,9 +2,9 @@
 import { useState, useEffect, useRef } from "react";
 
 interface TranscriptMsg {
-  role: "assistant" | "user";
+  role: "ai" | "user";
   text: string;
-  timestamp: string;
+  time: string;
 }
 
 interface CallState {
@@ -91,12 +91,12 @@ function SummaryState({ summary, name, msgs }: { summary:string; name:string; ms
       {/* Last messages */}
       {msgs.slice(-4).map((msg, i) => (
         <div key={i} style={{ display:"flex", gap:10, alignItems:"flex-start" }}>
-          {msg.role==="assistant" ? <AIAvatar /> : <UserAvatar name={name} />}
+          {msg.role==="ai" ? <AIAvatar /> : <UserAvatar name={name} />}
           <div style={{ flex:1 }}>
-            <span style={{ color:msg.role==="assistant"?"#60a5fa":"#9ca3af", fontSize:10, fontWeight:600 }}>
-              {msg.role==="assistant"?"AI Agent":name}
+            <span style={{ color:msg.role==="ai"?"#60a5fa":"#9ca3af", fontSize:10, fontWeight:600 }}>
+              {msg.role==="ai"?"AI Agent":name}
             </span>
-            <span style={{ color:"#374151", fontSize:10, marginLeft:6 }}>{msg.timestamp}</span>
+            <span style={{ color:"#374151", fontSize:10, marginLeft:6 }}>{msg.time}</span>
             <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.06)", borderRadius:10, padding:"8px 12px", marginTop:4 }}>
               <p style={{ color:"#6b7280", fontSize:12, lineHeight:1.6 }}>{msg.text}</p>
             </div>
@@ -168,7 +168,7 @@ export default function LiveConversation() {
         /* Live messages */
         <div style={{ flex:1, overflowY:"auto", display:"flex", flexDirection:"column", gap:14 }}>
           {msgs.map((msg, i) => {
-            const isAI = msg.role === "assistant";
+            const isAI = msg.role === "ai";
             const isLast = i === msgs.length - 1;
             return (
               <div key={i} style={{ display:"flex", gap:10, alignItems:"flex-start" }}>
@@ -179,7 +179,7 @@ export default function LiveConversation() {
                       <span style={{ color:isAI?"#60a5fa":"#9ca3af", fontSize:11, fontWeight:600 }}>
                         {isAI?"AI Agent":callerName}
                       </span>
-                      <span style={{ color:"#374151", fontSize:10 }}>{msg.timestamp}</span>
+                      <span style={{ color:"#374151", fontSize:10 }}>{msg.time}</span>
                     </div>
                     {isAI && isLast && isActive && <ChatWaveBars color="#3b82f6" count={12} />}
                   </div>

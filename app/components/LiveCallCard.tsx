@@ -117,14 +117,21 @@ export default function LiveCallCard() {
     return () => clearInterval(t);
   }, []);
 
-  /* Vapi Redis is authoritative — sheet is only used for extra lead details */
+  /* Vapi Redis is authoritative — sheet enriches with extra lead details */
   const isActive = vapiActive;
-  const name     = activeLead?.["Full Name"] || activeLead?.["Name"] || vapiName || "";
-  const phone    = activeLead?.["Phone Number"] || activeLead?.["Phone"] || vapiPhone || "--";
-  const property = activeLead?.["Property Type"] || activeLead?.["Property"] || "--";
-  const location = activeLead?.["Location"] || activeLead?.["City"] || "--";
-  const source   = activeLead?.["Lead Source"] || activeLead?.["Source"] || "--";
-  const callSt   = activeLead?.["Call Status"] || "No Active Call";
+
+  /* When a call is active: Vapi phone/name are most current.
+     Try to match a lead from the sheet by phone number for extra details. */
+  const matchedLead = isActive && vapiPhone
+    ? (activeLead ?? null)
+    : activeLead;
+
+  const name     = matchedLead?.["Full Name"] || matchedLead?.["Name"] || vapiName || "";
+  const phone    = vapiPhone || matchedLead?.["Phone Number"] || matchedLead?.["Phone"] || "--";
+  const property = matchedLead?.["Property Type"] || matchedLead?.["Property"] || "--";
+  const location = matchedLead?.["Location"] || matchedLead?.["City"] || "--";
+  const source   = matchedLead?.["Lead Source"] || matchedLead?.["Source"] || "--";
+  const callSt   = isActive ? "In Progress" : (matchedLead?.["Call Status"] || "No Active Call");
   const initials = name ? name.split(" ").filter(Boolean).slice(0,2).map((w:string)=>w[0]).join("").toUpperCase() : "--";
 
   return (
