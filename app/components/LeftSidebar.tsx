@@ -101,9 +101,26 @@ export default function LeftSidebar() {
       borderRight:"1px solid var(--border)",
       display:"flex", flexDirection:"column",
       alignItems:"center",
-      paddingTop:12, paddingBottom:12,
+      paddingTop:8, paddingBottom:12,
       gap:2, zIndex:40,
     }}>
+      {/* Shalimar mini logo mark */}
+      <div style={{
+        width:36, height:36, borderRadius:10, marginBottom:6, flexShrink:0,
+        background:"linear-gradient(135deg,#b8860b,#d4a843)",
+        display:"flex", alignItems:"center", justifyContent:"center",
+        boxShadow:"0 2px 10px rgba(212,168,67,0.3)",
+      }}>
+        <svg width="20" height="20" viewBox="0 0 18 18" fill="none">
+          <rect x="2" y="8" width="14" height="9" rx="0.5" fill="#fff" opacity="0.95"/>
+          <path d="M1 9L9 2L17 9" stroke="#fff" strokeWidth="1.4" strokeLinejoin="round" fill="none"/>
+          <rect x="4" y="10" width="2.5" height="2.5" rx="0.4" fill="#b8860b"/>
+          <rect x="7.7" y="10" width="2.5" height="2.5" rx="0.4" fill="#b8860b"/>
+          <rect x="11.5" y="10" width="2.5" height="2.5" rx="0.4" fill="#b8860b"/>
+          <rect x="7.5" y="13" width="3" height="4" rx="0.4" fill="#b8860b"/>
+        </svg>
+      </div>
+
       {NAV.map(({ href, Icon, label }) => {
         const active = href==="/" ? path==="/" : path.startsWith(href) && href!=="/";
         return (

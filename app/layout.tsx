@@ -4,8 +4,8 @@ import Navbar from "./components/Navbar";
 import LeftSidebar from "./components/LeftSidebar";
 
 export const metadata: Metadata = {
-  title: "VoxCall — Shalimar AI Dashboard",
-  description: "AI Voice Calling Dashboard for Shalimar Developers, Lucknow",
+  title: "Shalimar Developers — AI Dashboard",
+  description: "AI Voice Calling & Lead Management Dashboard — Shalimar Developers, Lucknow",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

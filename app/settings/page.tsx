@@ -160,7 +160,7 @@ export default function SettingsPage() {
             </Section>
 
             <Section title="About" icon={Info} color="#3B82F6" delay={0.34}>
-              <Row delay={0.38} label="Dashboard" sub="VoxCall AI Calling Dashboard"
+              <Row delay={0.38} label="Dashboard" sub="Shalimar Developers · AI Calling Dashboard"
                 right={<span style={{color:"#8F8F8F",fontSize:12}}>v1.0.0</span>}/>
               <Row delay={0.41} label="Client" sub="Lucknow, Uttar Pradesh"
                 right={<span style={{color:"#C5C5C5",fontSize:12}}>Shalimar Developers</span>}/>

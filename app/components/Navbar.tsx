@@ -30,21 +30,31 @@ export default function Navbar() {
       flexShrink:0,
     }}>
       {/* ── Logo ── */}
-      <div style={{ display:"flex", alignItems:"center", gap:8, marginRight:8, flexShrink:0 }}>
+      <div style={{ display:"flex", alignItems:"center", gap:9, marginRight:8, flexShrink:0 }}>
+        {/* Shalimar Developers building logo */}
         <div style={{
-          width:28, height:28, borderRadius:8,
-          background:"linear-gradient(135deg,#2563eb,#4f46e5)",
+          width:32, height:32, borderRadius:9,
+          background:"linear-gradient(135deg,#b8860b,#d4a843)",
           display:"flex", alignItems:"center", justifyContent:"center",
+          boxShadow:"0 2px 10px rgba(212,168,67,0.35)",
         }}>
-          {/* 2x2 grid logo */}
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <rect x="1" y="1" width="6" height="6" rx="1.5" fill="#fff"/>
-            <rect x="9" y="1" width="6" height="6" rx="1.5" fill="#fff" opacity="0.6"/>
-            <rect x="1" y="9" width="6" height="6" rx="1.5" fill="#fff" opacity="0.6"/>
-            <rect x="9" y="9" width="6" height="6" rx="1.5" fill="#fff" opacity="0.3"/>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            {/* Building silhouette */}
+            <rect x="2" y="8" width="14" height="9" rx="0.5" fill="#fff" opacity="0.95"/>
+            {/* Roof/triangle */}
+            <path d="M1 9L9 2L17 9" stroke="#fff" strokeWidth="1.4" strokeLinejoin="round" fill="none"/>
+            {/* Windows */}
+            <rect x="4" y="10" width="2.5" height="2.5" rx="0.4" fill="#b8860b"/>
+            <rect x="7.7" y="10" width="2.5" height="2.5" rx="0.4" fill="#b8860b"/>
+            <rect x="11.5" y="10" width="2.5" height="2.5" rx="0.4" fill="#b8860b"/>
+            {/* Door */}
+            <rect x="7.5" y="13" width="3" height="4" rx="0.4" fill="#b8860b"/>
           </svg>
         </div>
-        <span style={{ fontWeight:700, fontSize:15, color:"#fff", letterSpacing:"-0.01em" }}>VoxCall™</span>
+        <div style={{ display:"flex", flexDirection:"column", lineHeight:1 }}>
+          <span style={{ fontWeight:800, fontSize:13, color:"#fff", letterSpacing:"0.01em" }}>Shalimar</span>
+          <span style={{ fontWeight:500, fontSize:9, color:"#d4a843", letterSpacing:"0.08em", marginTop:1 }}>DEVELOPERS</span>
+        </div>
       </div>
 
       {/* ── Search ── */}

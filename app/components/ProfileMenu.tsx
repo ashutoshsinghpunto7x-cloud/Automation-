@@ -205,7 +205,7 @@ export default function ProfileMenu({ variant = "compact" }: Props) {
               </motion.button>
               <p style={{ textAlign: "center", color: "#5E6373", fontSize: 9, marginTop: 8,
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-                <Sparkles size={9} color="#5E6373"/>VoxCall™ Dashboard · v1.0.0
+                <Sparkles size={9} color="#d4a843"/>Shalimar Developers · AI Dashboard v1.0
               </p>
             </div>
           </motion.div>
