@@ -5,6 +5,7 @@ import {
   Search, Bell, CheckCircle, AlertCircle, ExternalLink, Copy, Check,
   Database, Zap, BellRing, Info, Sparkles,
 } from "lucide-react";
+import ProfileMenu from "../components/ProfileMenu";
 
 const BG = "#1E1F25"; const CARD = "linear-gradient(135deg,#2C2F3A 0%,#252831 100%)";
 const C2 = "#2A2D38"; const BD = "rgba(255,255,255,0.07)";
@@ -96,9 +97,7 @@ export default function SettingsPage() {
           <motion.button whileHover={{scale:1.06}} whileTap={{scale:0.94}}
             style={{width:44,height:44,borderRadius:50,background:C2,border:`1px solid ${BD}`,
               display:"flex",alignItems:"center",justifyContent:"center",color:"#8F8F8F"}}><Bell size={15}/></motion.button>
-          <motion.div whileHover={{scale:1.05}}
-            style={{width:44,height:44,borderRadius:50,background:"linear-gradient(135deg,#29A8FF,#3B82F6)",
-              display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:700,color:"#fff",cursor:"pointer"}}>EK</motion.div>
+          <ProfileMenu/>
         </motion.div>
 
         <div style={{flex:1,padding:"16px 24px 20px",overflow:"hidden",minHeight:0,overflowY:"auto"}}>
@@ -167,7 +166,7 @@ export default function SettingsPage() {
                 right={<span style={{color:"#C5C5C5",fontSize:12}}>Shalimar Developers</span>}/>
               <Row delay={0.44} label="Built by" sub="Powered by Next.js · Vapi · n8n · Google Sheets"
                 right={<span style={{color:"#8F8F8F",fontSize:12,display:"inline-flex",alignItems:"center",gap:5}}>
-                  <Sparkles size={11} color="#F5B73A"/>Ekansh Saxena
+                  <Sparkles size={11} color="#F5B73A"/>Varun Shukla
                 </span>}/>
             </Section>
           </div>

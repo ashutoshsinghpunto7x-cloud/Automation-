@@ -5,6 +5,7 @@ import {
   Search, Bell, RefreshCw, X, Phone, MapPin, Calendar,
   Users, Activity, Clock, Home, ChevronRight,
 } from "lucide-react";
+import ProfileMenu from "../components/ProfileMenu";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 interface Lead {
@@ -296,7 +297,7 @@ function AnalyticsSidebar({ stats, leads }: { stats:any; leads:Lead[] }) {
           border:"1px solid rgba(41,168,255,0.2)",borderRadius:R24,padding:"20px",
           boxShadow:`${SH},0 0 20px rgba(41,168,255,0.08)`}}>
         <p style={{color:"#8F8F8F",fontSize:11,marginBottom:4}}>Welcome back</p>
-        <p style={{color:"#FFFFFF",fontSize:18,fontWeight:700,marginBottom:2}}>Ekansh Saxena</p>
+        <p style={{color:"#FFFFFF",fontSize:18,fontWeight:700,marginBottom:2}}>Varun Shukla</p>
         <p style={{color:"#8F8F8F",fontSize:11}}>Shalimar Developers · Lucknow</p>
         <div style={{marginTop:14,display:"flex",gap:8}}>
           <div style={{flex:1,background:"rgba(255,255,255,0.07)",borderRadius:12,padding:"8px 12px",textAlign:"center"}}>
@@ -503,13 +504,7 @@ export default function LeadsPage() {
               display:"flex",alignItems:"center",justifyContent:"center",color:"#8F8F8F"}}>
             <Bell size={15}/>
           </motion.button>
-          <motion.div whileHover={{scale:1.05}}
-            style={{width:44,height:44,borderRadius:50,
-              background:"linear-gradient(135deg,#29A8FF,#3B82F6)",
-              display:"flex",alignItems:"center",justifyContent:"center",
-              fontSize:14,fontWeight:700,color:"#fff",cursor:"pointer"}}>
-            EK
-          </motion.div>
+          <ProfileMenu/>
         </motion.div>
 
         {/* ── Body ── */}

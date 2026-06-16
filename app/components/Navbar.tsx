@@ -1,6 +1,7 @@
 ﻿"use client";
 import { Bell, HelpCircle, ChevronDown, Activity } from "lucide-react";
 import { useEffect, useState } from "react";
+import ProfileMenu from "./ProfileMenu";
 
 export default function Navbar() {
   const [inProgress, setInProgress] = useState<number|null>(null);
@@ -111,16 +112,7 @@ export default function Navbar() {
       </button>
 
       {/* ── User ── */}
-      <div style={{ display:"flex", alignItems:"center", gap:8, flexShrink:0 }}>
-        <div style={{ width:32, height:32, borderRadius:"50%", background:"linear-gradient(135deg,#7c3aed,#4f46e5)", display:"flex", alignItems:"center", justifyContent:"center" }}>
-          <span style={{ color:"#fff", fontSize:11, fontWeight:700 }}>EK</span>
-        </div>
-        <div>
-          <p style={{ color:"#fff", fontSize:12, fontWeight:600, lineHeight:1.2 }}>Ekansh Saxena</p>
-          <p style={{ color:"#6b7280", fontSize:10, lineHeight:1.2 }}>Admin</p>
-        </div>
-        <ChevronDown size={12} color="#6b7280" />
-      </div>
+      <ProfileMenu variant="compact" />
     </nav>
   );
 }

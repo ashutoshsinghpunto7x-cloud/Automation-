@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import {
   Search, Bell, RefreshCw, TrendingUp, Users, Phone, Calendar, MapPin, Home, Target,
 } from "lucide-react";
+import ProfileMenu from "../components/ProfileMenu";
 
 interface Stats {
   totalLeads:number; callsToday?:number; answered:number; inProgress:number;
@@ -238,9 +239,7 @@ export default function AnalyticsPage() {
           <motion.button whileHover={{scale:1.06}} whileTap={{scale:0.94}}
             style={{width:44,height:44,borderRadius:50,background:C2,border:`1px solid ${BD}`,
               display:"flex",alignItems:"center",justifyContent:"center",color:"#8F8F8F"}}><Bell size={15}/></motion.button>
-          <motion.div whileHover={{scale:1.05}}
-            style={{width:44,height:44,borderRadius:50,background:"linear-gradient(135deg,#29A8FF,#3B82F6)",
-              display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:700,color:"#fff",cursor:"pointer"}}>EK</motion.div>
+          <ProfileMenu/>
         </motion.div>
 
         <div style={{flex:1,padding:"16px 24px 20px",overflow:"hidden",minHeight:0,overflowY:"auto"}}>
