@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
           ...(name ? { name } : {}),
         },
         /* Tell Vapi exactly where to send all webhook events */
-        serverUrl: "https://punto7x.vercel.app/api/vapi/webhook",
+        serverUrl: "https://automation-git-main-ashutoshsinghpunto7x-clouds-projects.vercel.app/api/vapi/webhook",
       }),
     });
 
