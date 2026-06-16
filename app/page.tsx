@@ -206,26 +206,21 @@ export default function OverviewPage() {
       <div style={{height:"100%",background:BG,display:"flex",flexDirection:"column",overflow:"hidden"}}>
         <div style={{flex:1,overflowY:"auto",padding:"18px 24px 24px",display:"flex",flexDirection:"column",gap:14}}>
 
-          {/* ROW 1: Live call (caller + conv) + Stats sidebar */}
-          <div style={{display:"flex",gap:14}}>
-            <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column"}}>
-              <div style={{display:"flex",gap:12}}>
-                <motion.div initial={{opacity:0,x:-10}} animate={{opacity:1,x:0}} transition={{delay:0.15,duration:0.4}}
-                  style={{width:280,flexShrink:0,background:CARD,border:`1px solid ${BD}`,
-                    borderRadius:R24,padding:"18px",boxShadow:SH}}>
-                  <LiveCallCard/>
-                </motion.div>
-                <motion.div initial={{opacity:0,x:10}} animate={{opacity:1,x:0}} transition={{delay:0.2,duration:0.4}}
-                  style={{flex:1,minWidth:0,background:CARD,border:`1px solid ${BD}`,
-                    borderRadius:R24,padding:"18px",minHeight:410,boxShadow:SH}}>
-                  <LiveConversation/>
-                </motion.div>
-              </div>
-            </div>
-
+          {/* ROW 1: Live call (caller + conv) + Stats sidebar — all aligned to same height */}
+          <div style={{display:"flex",gap:14,height:560,flexShrink:0}}>
+            <motion.div initial={{opacity:0,x:-10}} animate={{opacity:1,x:0}} transition={{delay:0.15,duration:0.4}}
+              style={{width:280,flexShrink:0,background:CARD,border:`1px solid ${BD}`,
+                borderRadius:R24,padding:"18px",boxShadow:SH,overflowY:"auto"}}>
+              <LiveCallCard/>
+            </motion.div>
+            <motion.div initial={{opacity:0,x:10}} animate={{opacity:1,x:0}} transition={{delay:0.2,duration:0.4}}
+              style={{flex:1,minWidth:0,background:CARD,border:`1px solid ${BD}`,
+                borderRadius:R24,padding:"18px",boxShadow:SH,overflow:"hidden",display:"flex",flexDirection:"column"}}>
+              <LiveConversation/>
+            </motion.div>
             <motion.div initial={{opacity:0,x:20}} animate={{opacity:1,x:0}} transition={{delay:0.25,duration:0.4}}
               style={{width:280,flexShrink:0,background:CARD,border:`1px solid ${BD}`,
-                borderRadius:R24,padding:"18px",maxHeight:540,overflowY:"auto",boxShadow:SH}}>
+                borderRadius:R24,padding:"18px",boxShadow:SH,overflowY:"auto"}}>
               <StatsSidebar/>
             </motion.div>
           </div>
