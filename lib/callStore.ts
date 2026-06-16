@@ -37,33 +37,43 @@ export async function getCall(): Promise<CallState> {
 }
 
 export async function startCall(callId: string, callerName: string, callerPhone: string) {
-  await redis.set(KEY, { ...DEFAULT, active: true, callId, callerName, callerPhone });
+  try {
+    await redis.set(KEY, { ...DEFAULT, active: true, callId, callerName, callerPhone });
+  } catch (e) { console.error("[callStore] startCall failed:", e); }
 }
 
 export async function addMessage(role: "ai" | "user", text: string) {
-  const call = await getCall();
-  const time = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
-  const messages = [...(call.messages ?? []).slice(-49), { role, text, time }];
-  await redis.set(KEY, { ...call, messages });
+  try {
+    const call = await getCall();
+    const time = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+    const messages = [...(call.messages ?? []).slice(-49), { role, text, time }];
+    await redis.set(KEY, { ...call, messages });
+  } catch (e) { console.error("[callStore] addMessage failed:", e); }
 }
 
 export async function updateAnalysis(sentiment?: string, intent?: string, language?: string, noise?: string) {
-  const call = await getCall();
-  await redis.set(KEY, {
-    ...call,
-    sentiment: sentiment ?? call.sentiment,
-    intent: intent ?? call.intent,
-    language: language ?? call.language,
-    noise: noise ?? call.noise,
-  });
+  try {
+    const call = await getCall();
+    await redis.set(KEY, {
+      ...call,
+      sentiment: sentiment ?? call.sentiment,
+      intent: intent ?? call.intent,
+      language: language ?? call.language,
+      noise: noise ?? call.noise,
+    });
+  } catch (e) { console.error("[callStore] updateAnalysis failed:", e); }
 }
 
 export async function endCall(summary: string) {
-  const call = await getCall();
-  const endedAt = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
-  await redis.set(KEY, { ...call, active: false, summary, endedAt }, { ex: 3600 });
+  try {
+    const call = await getCall();
+    const endedAt = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+    await redis.set(KEY, { ...call, active: false, summary, endedAt }, { ex: 3600 });
+  } catch (e) { console.error("[callStore] endCall failed:", e); }
 }
 
 export async function resetCall() {
-  await redis.set(KEY, DEFAULT);
+  try {
+    await redis.set(KEY, DEFAULT);
+  } catch (e) { console.error("[callStore] resetCall failed:", e); }
 }

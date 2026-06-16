@@ -113,8 +113,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ received: true });
   } catch (err) {
+    /* Always return 200 so Vapi doesn't retry — log the real error */
     console.error("[Vapi webhook error]", err);
-    return NextResponse.json({ error: "bad request" }, { status: 400 });
+    return NextResponse.json({ received: true, warning: String(err) });
   }
 }
 
